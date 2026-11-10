@@ -105,8 +105,21 @@ async function loadAllSheetData() {
   try {
     const inventarioRaw = await fetchCsvData(CONFIG.ENDPOINTS.INVENTARIO);
 
-    // Filtrar filas válidas que tengan título / producto
-    const inventarioValido = inventarioRaw.filter(item => item.producto && String(item.producto).trim() !== '');
+    // Filtrar filas válidas: DEBEN tener un nombre de producto real Y obligatoriamente un grupo asignado
+    const inventarioValido = inventarioRaw.filter(item => {
+      const productoValido = item.producto && 
+                             String(item.producto).trim() !== '' && 
+                             String(item.producto).trim() !== 'Sin Título';
+      
+      const grupoNormalizado = String(item.grupo || '').toLowerCase().trim();
+
+      // REGLA NUEVA: Si la casilla de grupo está vacía o no existe, SE SALTA y no se cuenta
+      if (!grupoNormalizado) {
+        return false;
+      }
+
+      return productoValido;
+    });
 
     const productos = [];
     const paquetes = [];
@@ -120,6 +133,7 @@ async function loadAllSheetData() {
       } else if (grupoNormalizado === 'promocion' || grupoNormalizado === 'promociones') {
         promociones.push(item);
       } else {
+        // Se asume como producto solo si tiene un grupo especificado válido (ej. "producto")
         productos.push(item);
       }
     });

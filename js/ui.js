@@ -37,7 +37,7 @@ function sortCatalogItems(items) {
 function renderHeaderAndFooter(config) {
   if (!config) return;
 
-  const storeName = config.nombre || 'Ferretería';
+  const storeName = config.nombre || 'Ferrelectrica';
   const nameEl = document.getElementById('store-name');
   if (nameEl) {
     nameEl.textContent = storeName;
@@ -70,7 +70,7 @@ function renderStockBadge(item) {
  */
 function renderCardMedia(item) {
   const isAgotado = (Number(item.cantidad) || 0) <= 0;
-  const storeName = (CONFIG && CONFIG.STORE && CONFIG.STORE.nombre) ? CONFIG.STORE.nombre : 'Ferretería';
+  const storeName = (CONFIG && CONFIG.STORE && CONFIG.STORE.nombre) ? CONFIG.STORE.nombre : 'Ferrelectrica';
 
   const fallbackHTML = `
     <div class="w-full h-40 bg-gray-900 flex flex-col items-center justify-center p-4 text-center select-none ${isAgotado ? 'opacity-50' : ''}">

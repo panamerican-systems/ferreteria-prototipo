@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ferretería - Catálogo & POS</title>
+    <title>Ferrelectrica - Catálogo</title>
     <!-- Favicon Dinámico -->
-    <link id="logo-store" rel="icon" href="https://via.placeholder.com/60" type="image/png">
+    <link id="logo-store" rel="icon" href="assets/images/general/logo.png" type="image/png">
     <!-- CDN de Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Estilos personalizados -->
@@ -18,16 +18,17 @@
     <!-- ========================================== -->
     <header id="main-header" class="bg-white shadow-md sticky top-0 z-30 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-            <!-- Nombre de la Tienda -->
+            <!-- Nombre de la Tienda y Logotipo -->
             <div class="flex items-center space-x-3">
+                <img src="assets/images/general/logo.png" alt="Ferrelectrica Logo" class="w-10 h-10 object-contain rounded-md">
                 <div>
-                    <h1 id="store-name" class="font-bold text-xl leading-tight text-gray-900">Ferretería</h1>
+                    <h1 id="store-name" class="font-bold text-xl leading-tight text-gray-900">Ferrelectrica</h1>
                 </div>
             </div>
 
             <!-- Botón del Carrito de Compras / Calculadora POS -->
             <button id="cart-btn" class="relative bg-gray-900 text-white p-2.5 rounded-full hover:bg-gray-800 transition flex items-center justify-center">
-                <img src="assets/icons/cart-fill.svg" alt="Carrito de compras" class="w-6 h-6 filter invert">
+                <img src="assets/images/icons/cart-fill.svg" alt="Carrito de compras" class="w-6 h-6 filter invert">
                 <span id="cart-counter" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
             </button>
         </div>
