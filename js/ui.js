@@ -211,7 +211,10 @@ function closeProductDetailModal() {
 function renderSection(sectionKey, currency = '$') {
   const state = paginationState[sectionKey];
   const gridContainer = document.getElementById(`grid-${sectionKey}`);
-  const pageLabel = document.getElementById(`page-${sectionKey.substring(0, 4)}`);
+  
+  // CORRECCIÓN: Mapeo exacto del prefijo del ID según la sección
+  const prefixMap = { productos: 'prod', paquetes: 'paq', promociones: 'promo' };
+  const pageLabel = document.getElementById(`page-${prefixMap[sectionKey] || sectionKey.substring(0, 4)}`);
   
   if (!gridContainer) return;
 

@@ -29,7 +29,7 @@ const CONFIG = {
   
   // Datos locales de la tienda (Sistema "none" para WhatsApp y Redes)
   STORE: {
-    nombre: "Ferretería",
+    nombre: "Ferrelectrica",
     whatsapp: "none",
     moneda: "$"
   },

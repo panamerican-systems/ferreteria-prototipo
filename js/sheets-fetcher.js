@@ -128,9 +128,9 @@ async function loadAllSheetData() {
     inventarioValido.forEach(item => {
       const grupoNormalizado = String(item.grupo || '').toLowerCase().trim();
 
-      if (grupoNormalizado === 'paquete' || grupoNormalizado === 'paquetes') {
+      if (grupoNormalizado === 'paquete' || grupoNormalizado === 'paquetes' || grupoNormalizado === 'combos'|| grupoNormalizado === 'combo') {
         paquetes.push(item);
-      } else if (grupoNormalizado === 'promocion' || grupoNormalizado === 'promociones') {
+      } else if (grupoNormalizado === 'promocion' || grupoNormalizado === 'promociones' || grupoNormalizado === 'promo' || grupoNormalizado === 'promos') {
         promociones.push(item);
       } else {
         // Se asume como producto solo si tiene un grupo especificado válido (ej. "producto")

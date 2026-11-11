@@ -101,6 +101,54 @@ function setupEventListeners(fullData) {
 
       renderAllSections();
     });
+
+    // =========================================================================
+  // BOTÓN DE FILTRO: SOLO AGOTADOS
+  // =========================================================================
+  const filterAgotadosBtn = document.getElementById('filter-agotados-btn');
+  let showingOnlyAgotados = false;
+
+  if (filterAgotadosBtn) {
+      filterAgotadosBtn.addEventListener('click', () => {
+        showingOnlyAgotados = !showingOnlyAgotados;
+      
+        // Cambiar estilo visual del botón para indicar si está activo
+        if (showingOnlyAgotados) {
+          filterAgotadosBtn.classList.remove('bg-white', 'text-gray-700', 'border-gray-300');
+          filterAgotadosBtn.classList.add('bg-red-600', 'text-white', 'border-red-600');
+          filterAgotadosBtn.textContent = "Ver Todos";
+        } else {
+          filterAgotadosBtn.classList.remove('bg-red-600', 'text-white', 'border-red-600');
+          filterAgotadosBtn.classList.add('bg-white', 'text-gray-700', 'border-gray-300');
+          filterAgotadosBtn.textContent = "⚠️ Agotados";
+        }
+      
+        // Limpiar el buscador de texto al usar este filtro para evitar conflictos
+        const searchInput = document.getElementById('global-search');
+        if (searchInput) searchInput.value = '';
+      
+        if (showingOnlyAgotados) {
+          // Filtrar solo productos con cantidad <= 0
+          const filterAgotado = item => (Number(item.cantidad) || 0) <= 0;
+        
+          paginationState.productos.data = sortCatalogItems((fullData.productos || []).filter(filterAgotado));
+          paginationState.paquetes.data = sortCatalogItems((fullData.paquetes || []).filter(filterAgotado));
+          paginationState.promociones.data = sortCatalogItems((fullData.promociones || []).filter(filterAgotado));
+        } else {
+          // Restaurar catálogo completo ordenado por stock
+          paginationState.productos.data = sortCatalogItems(fullData.productos || []);
+          paginationState.paquetes.data = sortCatalogItems(fullData.paquetes || []);
+          paginationState.promociones.data = sortCatalogItems(fullData.promociones || []);
+        }
+      
+        // Reiniciar páginas a la 1
+        paginationState.productos.page = 1;
+        paginationState.paquetes.page = 1;
+        paginationState.promociones.page = 1;
+      
+        renderAllSections();
+      });
+    }
   }
 
   // =========================================================================
