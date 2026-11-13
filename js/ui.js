@@ -51,7 +51,8 @@ function renderHeaderAndFooter(config) {
 }
 
 /**
- * Genera la representación de las insignias (Badges) según el stock del almacén.
+ * Genera la representación de las insignias (Badges) en las tarjetas principales:
+ * Solo muestra alerta si hay 10 o menos unidades, o si está agotado.
  */
 function renderStockBadge(item) {
   const stock = Number(item.cantidad) || 0;
@@ -62,7 +63,7 @@ function renderStockBadge(item) {
   } else if (stock <= 10) {
     return `<span class="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase shadow">Stock: ${stock} ${medida}</span>`;
   }
-  return '';
+  return ''; // No muestra badge en tarjeta si hay más de 10 para mantener limpio el catálogo
 }
 
 /**
@@ -161,13 +162,14 @@ function openProductDetailById(id) {
 }
 
 /**
- * Abre el modal con los detalles completos del producto.
+ * Abre el modal con los detalles completos del producto, mostrando el stock real en vivo.
  */
 function openProductDetailModal(item) {
   const modal = document.getElementById('product-detail-modal');
   if (!modal || !item) return;
 
   const stock = Number(item.cantidad) || 0;
+  const medida = item.medida || 'pz';
   const isAgotado = stock <= 0;
   const activeCurrency = typeof currentCurrency !== 'undefined' ? currentCurrency : '$';
   const titulo = item.producto || item.titulo || 'Sin Título';
@@ -177,10 +179,40 @@ function openProductDetailModal(item) {
   document.getElementById('detail-modal-price').textContent = `${activeCurrency} ${Number(item.precio || 0).toFixed(2)}`;
   document.getElementById('detail-modal-description').textContent = item.descripcion || 'Sin descripción disponible.';
 
+  // Insignias flotantes sobre la imagen (solo alerta si <= 10 o agotado)
   const badgesContainer = document.getElementById('detail-modal-badges');
   if (badgesContainer) {
     badgesContainer.innerHTML = renderStockBadge(item);
   }
+
+  // LÍNEA EN VIVO DE STOCK EXACTO (Visible para todos debajo de la imagen / título)
+  let liveStockContainer = document.getElementById('detail-modal-livestock');
+  if (!liveStockContainer) {
+    // Si no existe el elemento en el HTML, lo creamos dinámicamente justo antes del título o descripción
+    const titleEl = document.getElementById('detail-modal-title');
+    liveStockContainer = document.createElement('div');
+    liveStockContainer.id = 'detail-modal-livestock';
+    titleEl.parentNode.insertBefore(liveStockContainer, titleEl);
+  }
+
+  // Estilo dinámico para el stock en vivo
+  let stockBadgeStyle = "bg-emerald-100 text-emerald-800 border-emerald-200";
+  let stockText = `Stock disponible: ${stock} ${medida}`;
+  
+  if (stock <= 0) {
+    stockBadgeStyle = "bg-red-100 text-red-800 border-red-200";
+    stockText = `Producto Agotado (0 ${medida})`;
+  } else if (stock <= 10) {
+    stockBadgeStyle = "bg-amber-100 text-amber-800 border-amber-200";
+    stockText = `Stock bajo: ${stock} ${medida}`;
+  }
+
+  liveStockContainer.innerHTML = `
+    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border text-xs font-bold mb-2 ${stockBadgeStyle}">
+      <span>📦</span>
+      <span>${stockText}</span>
+    </div>
+  `;
 
   const addBtn = document.getElementById('detail-modal-add-btn');
   if (addBtn) {
@@ -212,7 +244,6 @@ function renderSection(sectionKey, currency = '$') {
   const state = paginationState[sectionKey];
   const gridContainer = document.getElementById(`grid-${sectionKey}`);
   
-  // CORRECCIÓN: Mapeo exacto del prefijo del ID según la sección
   const prefixMap = { productos: 'prod', paquetes: 'paq', promociones: 'promo' };
   const pageLabel = document.getElementById(`page-${prefixMap[sectionKey] || sectionKey.substring(0, 4)}`);
   

@@ -128,8 +128,8 @@ function setupEventListeners(fullData) {
         if (searchInput) searchInput.value = '';
       
         if (showingOnlyAgotados) {
-          // Filtrar solo productos con cantidad <= 0
-          const filterAgotado = item => (Number(item.cantidad) || 0) <= 0;
+          // Filtrar solo productos con cantidad <= 2
+          const filterAgotado = item => (Number(item.cantidad) || 0) <= 2;
         
           paginationState.productos.data = sortCatalogItems((fullData.productos || []).filter(filterAgotado));
           paginationState.paquetes.data = sortCatalogItems((fullData.paquetes || []).filter(filterAgotado));
