@@ -6,28 +6,47 @@
     <title>Ferrelectrica - Catálogo</title>
     <!-- Favicon Dinámico -->
     <link id="logo-store" rel="icon" href="assets/images/general/logo.png" type="image/png">
-    <!-- CDN de Tailwind CSS -->
+    
+    <!-- CDN de Tailwind CSS con tu Paleta de Azules Personalizada -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ferre: {
+                dark: '#182042',
+                main: '#2A4D91',
+                bright: '#2263DB',
+                sky: '#0074D9',
+                muted: '#54729E',
+              }
+            }
+          }
+        }
+      }
+    </script>
+
     <!-- Estilos personalizados -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+<body class="bg-slate-50 text-gray-800 flex flex-col min-h-screen">
 
     <!-- ========================================== -->
     <!-- 1. ENCABEZADO Y NAVEGACIÓN (HEADER)        -->
     <!-- ========================================== -->
-    <header id="main-header" class="bg-white shadow-md sticky top-0 z-30 transition-colors duration-300">
+    <header id="main-header" class="bg-ferre-dark text-white shadow-md sticky top-0 z-30 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <!-- Nombre de la Tienda y Logotipo -->
             <div class="flex items-center space-x-3">
-                <img src="assets/images/general/logo.png" alt="Ferrelectrica Logo" class="w-10 h-10 object-contain rounded-md">
+                <img src="assets/images/general/logo.png" alt="Ferrelectrica Logo" class="w-10 h-10 object-contain rounded-md bg-white p-0.5">
                 <div>
-                    <h1 id="store-name" class="font-bold text-xl leading-tight text-gray-900">Ferrelectrica</h1>
+                    <h1 id="store-name" class="font-bold text-xl leading-tight text-white">Ferrelectrica DAE</h1>
                 </div>
             </div>
 
             <!-- Botón del Carrito de Compras / Calculadora POS -->
-            <button id="cart-btn" class="relative bg-gray-900 text-white p-2.5 rounded-full hover:bg-gray-800 transition flex items-center justify-center">
+            <button id="cart-btn" class="relative bg-ferre-bright text-white p-2.5 rounded-full hover:bg-ferre-main transition flex items-center justify-center shadow">
                 <img src="assets/images/icons/cart-fill.svg" alt="Carrito de compras" class="w-6 h-6 filter invert">
                 <span id="cart-counter" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
             </button>

@@ -213,16 +213,4 @@ function renderCartUI() {
         totalEl.textContent = `${activeCurrency} ${calculateCartTotal().toFixed(2)}`;
     }
 
-    // 4. Adaptar el botón según el estado de WhatsApp ("none" o Número)
-    const sendOrderBtn = document.getElementById('send-order-btn');
-    if (sendOrderBtn) {
-        const whatsappConfig = CONFIG && CONFIG.STORE ? CONFIG.STORE.whatsapp : 'none';
-        if (whatsappConfig === 'none' || String(whatsappConfig).trim() === '') {
-            sendOrderBtn.textContent = "Cobrar y Limpiar Boleta";
-            sendOrderBtn.className = "w-full bg-emerald-700 text-white font-bold py-3 uppercase tracking-wider hover:bg-emerald-800 transition";
-        } else {
-            sendOrderBtn.textContent = "Enviar Pedido por WhatsApp";
-            sendOrderBtn.className = "w-full bg-black text-white font-bold py-3 uppercase tracking-wider hover:bg-gray-800 transition";
-        }
-    }
 }

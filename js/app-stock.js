@@ -4,10 +4,24 @@
  * ==============================================================================
  */
 
+// Sobrescribimos renderAllSections para usar el generador de tarjetas de stock con sus insignias
+function renderAllSections() {
+  renderSection('productos', currentCurrency, createStockCardHTML);
+  renderSection('paquetes', currentCurrency, createStockCardHTML);
+  renderSection('promociones', currentCurrency, createStockCardHTML);
+}
+
 function setupPageEventListeners(fullData) {
   setupPaginationControls('productos', 'prod');
   setupPaginationControls('paquetes', 'paq');
   setupPaginationControls('promociones', 'promo');
+
+  // Asegurar que el botón del POS tenga el texto y estilo correcto de cobro local
+  const sendOrderBtn = document.getElementById('send-order-btn');
+  if (sendOrderBtn) {
+    sendOrderBtn.textContent = "Cobrar y Limpiar Boleta";
+    sendOrderBtn.className = "w-full bg-emerald-700 text-white font-bold py-3 uppercase tracking-wider hover:bg-emerald-800 transition rounded-lg shadow";
+  }
 
   // Buscador inteligente en inventario
   const searchInput = document.getElementById('global-search');
@@ -143,7 +157,6 @@ function setupPageEventListeners(fullData) {
   }
 
   // Botón de cobro local y limpieza de boleta
-  const sendOrderBtn = document.getElementById('send-order-btn');
   if (sendOrderBtn) {
     sendOrderBtn.addEventListener('click', () => {
       if (getCart().length === 0) {

@@ -1,29 +1,27 @@
 /* ==========================================
-   1. ESTILOS DEL CARRITO TIPO TICKET (B/N)
+   PALETA DE AZULES - FERRELECTRICA DAE
    ========================================== */
-/* Efecto visual de papel continuo/punteado */
-.ticket-border-bottom {
-  border-bottom: 2px dashed #000000;
+:root {
+  --ferre-dark: #182042;      /* Azul marino oscuro (Fondo general / bordes) */
+  --ferre-main: #2A4D91;      /* Azul real / medio (Bloques y encabezados) */
+  --ferre-bright: #2263DB;    /* Azul brillante / eléctrico (Botones principales) */
+  --ferre-sky: #0074D9;       /* Azul celeste (Acentos y detalles) */
+  --ferre-muted: #54729E;     /* Azul grisáceo / periwinkle (Recuadros) */
 }
 
-/* Estilización de la barra de desplazamiento interna */
+/* Estilos de la barra de desplazamiento del ticket */
 #cart-items-list::-webkit-scrollbar {
   width: 4px;
 }
-
 #cart-items-list::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
-
 #cart-items-list::-webkit-scrollbar-thumb {
-  background: #000000;
+  background: var(--ferre-dark);
   border-radius: 2px;
 }
 
-/* ==========================================
-   2. ANIMACIONES Y TRANSICIONES
-   ========================================== */
-/* Suavizado de aparición para modales */
+/* Transiciones de modales */
 .modal-fade-in {
   animation: fadeIn 0.2s ease-in-out forwards;
 }

@@ -6,19 +6,39 @@
     <title>Ferrelectrica DAE - Panel Principal</title>
     <!-- Favicon -->
     <link rel="icon" href="assets/images/general/logo.png" type="image/png">
-    <!-- CDN de Tailwind CSS -->
+    
+    <!-- CDN de Tailwind CSS con tu Paleta de Azules Personalizada -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ferre: {
+                dark: '#182042',
+                main: '#2A4D91',
+                bright: '#2263DB',
+                sky: '#0074D9',
+                muted: '#54729E',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-gray-100 text-gray-800 flex flex-col min-h-screen">
+<body class="bg-slate-100 text-gray-800 flex flex-col min-h-screen">
 
     <!-- Encabezado -->
-    <header class="bg-white shadow-md">
+    <header class="bg-ferre-dark text-white shadow-md">
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <img src="assets/images/general/logo.png" alt="Ferrelectrica Logo" class="w-10 h-10 object-contain rounded-md">
-                <h1 class="font-bold text-xl text-gray-900">Ferrelectrica DAE</h1>
+                <img src="assets/images/general/logo.png" alt="Ferrelectrica Logo" class="w-10 h-10 object-contain rounded-md bg-white p-0.5">
+                <h1 class="font-bold text-xl text-white">Ferrelectrica DAE</h1>
             </div>
-            <span class="text-xs bg-gray-900 text-white px-3 py-1 rounded-full font-semibold uppercase tracking-wider">Sistema Central</span>
+            <span class="text-xs bg-ferre-bright text-white px-3 py-1 rounded-full font-semibold uppercase tracking-wider shadow">Sistema Central</span>
         </div>
     </header>
 
@@ -27,7 +47,7 @@
         <div class="max-w-3xl w-full text-center space-y-8">
             
             <div class="space-y-3">
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-ferre-dark tracking-tight">
                     ¡Bienvenidos a Ferrelectrica DAE!
                 </h2>
                 <p class="text-gray-600 text-base max-w-xl mx-auto">
@@ -39,32 +59,32 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
                 
                 <!-- Enlace a Inventario / POS (stock.html) -->
-                <a href="stock.html" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-gray-900 transition flex flex-col items-center text-center group">
-                    <div class="w-16 h-16 bg-gray-900 text-white rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-105 transition shadow">
+                <a href="stock.html" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-ferre-dark transition flex flex-col items-center text-center group">
+                    <div class="w-16 h-16 bg-ferre-dark text-white rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-105 transition shadow">
                         📦
                     </div>
                     <h3 class="font-bold text-lg text-gray-900 mb-1">Inventario & POS</h3>
                     <p class="text-xs text-gray-500 mb-6">
                         Control de stock en vivo, caja registradora, calculadora de cambio y cobro en mostrador.
                     </p>
-                    <span class="mt-auto inline-flex items-center text-xs font-bold uppercase text-gray-900 group-hover:underline">
+                    <span class="mt-auto inline-flex items-center text-xs font-bold uppercase text-ferre-dark group-hover:underline">
                         Abrir Stock &rarr;
                     </span>
                 </a>
 
                 <!-- Enlace a Tienda / Catálogo Clientes (store.html) - YA ACTIVA -->
-                <a href="store.html" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-emerald-500 hover:shadow-lg hover:border-emerald-700 transition flex flex-col items-center text-center group relative overflow-hidden">
-                    <div class="absolute top-3 right-3 bg-emerald-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase shadow">
+                <a href="store.html" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-ferre-bright hover:shadow-lg hover:border-ferre-main transition flex flex-col items-center text-center group relative overflow-hidden">
+                    <div class="absolute top-3 right-3 bg-ferre-bright text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase shadow">
                         ¡Abierto!
                     </div>
-                    <div class="w-16 h-16 bg-emerald-700 text-white rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-105 transition shadow">
+                    <div class="w-16 h-16 bg-ferre-bright text-white rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-105 transition shadow">
                         🛒
                     </div>
                     <h3 class="font-bold text-lg text-gray-900 mb-1">Tienda / Clientes</h3>
                     <p class="text-xs text-gray-500 mb-6">
                         Catálogo web público optimizado para recibir pedidos de clientes directamente por WhatsApp.
                     </p>
-                    <span class="mt-auto inline-flex items-center text-xs font-bold uppercase text-emerald-700 group-hover:underline">
+                    <span class="mt-auto inline-flex items-center text-xs font-bold uppercase text-ferre-bright group-hover:underline">
                         Visitar Tienda &rarr;
                     </span>
                 </a>
@@ -75,7 +95,7 @@
     </main>
 
     <!-- Pie de página -->
-    <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500">
+    <footer class="bg-ferre-dark text-white border-t border-gray-800 py-4 text-center text-xs text-gray-300">
         Panamerican Systems &bull; Ferrelectrica DAE &copy; 2026
     </footer>
 

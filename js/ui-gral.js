@@ -14,6 +14,9 @@ const paginationState = {
 // Referencia global al catálogo completo
 let rawCatalogData = { productos: [], paquetes: [], promociones: [], todos: [] };
 
+// Generador de tarjetas activo por defecto (se sobrescribe en ui-stock.js o ui-store.js)
+let activeCardGenerator = createCardHTML;
+
 /**
  * Ordena los ítems según stock (Disponibles primero, Agotados al final).
  */
@@ -57,9 +60,9 @@ function renderCardMedia(item) {
   const storeName = (CONFIG && CONFIG.STORE && CONFIG.STORE.nombre) ? CONFIG.STORE.nombre : 'Ferrelectrica';
 
   const fallbackHTML = `
-    <div class="w-full aspect-square bg-gray-900 flex flex-col items-center justify-center p-4 text-center select-none ${isAgotado ? 'opacity-50' : ''}">
+    <div class="w-full aspect-square bg-ferre-dark flex flex-col items-center justify-center p-4 text-center select-none ${isAgotado ? 'opacity-50' : ''}">
       <span class="text-white font-extrabold text-sm uppercase tracking-wider line-clamp-1">${storeName}</span>
-      <span class="text-gray-400 text-[10px] uppercase font-semibold">Catálogo POS</span>
+      <span class="text-gray-300 text-[10px] uppercase font-semibold">Catálogo POS</span>
     </div>
   `;
 
@@ -120,7 +123,7 @@ function createCardHTML(item, currency = '$', badgeHTML = '') {
           <button 
             onclick="addToCart('${item.id}')"
             ${isAgotado ? 'disabled' : ''} 
-            class="w-full bg-gray-900 text-white text-xs font-semibold py-1.5 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition">
+            class="w-full bg-ferre-dark text-white text-xs font-semibold py-1.5 rounded-lg hover:bg-ferre-main disabled:opacity-50 disabled:cursor-not-allowed transition">
             ${isAgotado ? 'Agotado' : 'Agregar'}
           </button>
         </div>
@@ -157,9 +160,9 @@ function closeProductDetailModal() {
 }
 
 /**
- * Renderiza la rejilla y controles de paginación de una sección (con generador por defecto).
+ * Renderiza la rejilla y controles de paginación de una sección utilizando el generador activo.
  */
-function renderSection(sectionKey, currency = '$', cardGeneratorFn = createCardHTML) {
+function renderSection(sectionKey, currency = '$', cardGeneratorFn = null) {
   const state = paginationState[sectionKey];
   const gridContainer = document.getElementById(`grid-${sectionKey}`);
   
@@ -180,12 +183,14 @@ function renderSection(sectionKey, currency = '$', cardGeneratorFn = createCardH
   const startIndex = (state.page - 1) * itemsPerPage;
   const paginatedItems = state.data.slice(startIndex, startIndex + itemsPerPage);
 
+  // Usa el generador explícito si se pasa, o el activeCardGenerator global
+  const generator = cardGeneratorFn || activeCardGenerator;
+
   if (paginatedItems.length === 0) {
     gridContainer.innerHTML = `<p class="col-span-full text-center text-sm text-gray-400 py-4">No se encontraron ítems en esta sección.</p>`;
   } else {
-    // Si la función generadora espera badgeHTML extra, manejamos ambos casos de forma segura
     gridContainer.innerHTML = paginatedItems.map(item => {
-      return cardGeneratorFn(item, currency);
+      return generator(item, currency);
     }).join('');
   }
 

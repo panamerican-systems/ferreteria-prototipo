@@ -4,9 +4,9 @@
  * ==============================================================================
  */
 
-/**
- * Insignia comercial de 3 niveles para el catálogo principal de clientes.
- */
+// Registrar el generador de tarjetas de tienda activo
+activeCardGenerator = createStoreCardHTML;
+
 function renderStoreStockBadge(item) {
   const stock = Number(item.cantidad) || 0;
 
@@ -18,25 +18,16 @@ function renderStoreStockBadge(item) {
   return `<span class="bg-emerald-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase shadow-md">Disponible</span>`;
 }
 
-/**
- * Generador de tarjetas exclusivo para la tienda de clientes.
- */
 function createStoreCardHTML(item, currency = '$') {
   return createCardHTML(item, currency, renderStoreStockBadge(item));
 }
 
-/**
- * Renderiza todas las secciones usando el catálogo comercial.
- */
 function renderAllSections() {
-  renderSection('productos', currentCurrency, createStoreCardHTML);
-  renderSection('paquetes', currentCurrency, createStoreCardHTML);
-  renderSection('promociones', currentCurrency, createStoreCardHTML);
+  renderSection('productos', currentCurrency);
+  renderSection('paquetes', currentCurrency);
+  renderSection('promociones', currentCurrency);
 }
 
-/**
- * Abre el modal de detalles con los 3 niveles de colores y mensajes comerciales para el cliente.
- */
 function openProductDetailModal(item) {
   const modal = document.getElementById('product-detail-modal');
   if (!modal || !item) return;
@@ -52,7 +43,6 @@ function openProductDetailModal(item) {
     imgElement.src = (item.foto && item.foto !== 'NaN') ? item.foto : 'https://via.placeholder.com/300';
   }
 
-  // Definición de estilos y textos según los 3 niveles solicitados por el pana
   let badgeStyle = "bg-emerald-500 text-white border-emerald-600";
   let badgeText = "Disponible";
   

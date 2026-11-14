@@ -4,6 +4,9 @@
  * ==============================================================================
  */
 
+// Registrar el generador de tarjetas de stock activo para que la paginación no lo pierda
+activeCardGenerator = createStockCardHTML;
+
 /**
  * Genera la insignia de stock para el catálogo principal (solo alerta si <= 10 o agotado).
  */
@@ -19,25 +22,16 @@ function renderStockBadge(item) {
   return '';
 }
 
-/**
- * Sobrescribe la generación de tarjetas para inyectar la insignia de stock en stock.html
- */
 function createStockCardHTML(item, currency = '$') {
   return createCardHTML(item, currency, renderStockBadge(item));
 }
 
-/**
- * Renderiza todas las secciones usando el generador de tarjetas de stock.
- */
 function renderAllSections() {
-  renderSection('productos', currentCurrency, createStockCardHTML);
-  renderSection('paquetes', currentCurrency, createStockCardHTML);
-  renderSection('promociones', currentCurrency, createStockCardHTML);
+  renderSection('productos', currentCurrency);
+  renderSection('paquetes', currentCurrency);
+  renderSection('promociones', currentCurrency);
 }
 
-/**
- * Abre el modal de detalles con el indicador de stock exacto en vivo flotando en la esquina.
- */
 function openProductDetailModal(item) {
   const modal = document.getElementById('product-detail-modal');
   if (!modal || !item) return;
@@ -79,9 +73,6 @@ function openProductDetailModal(item) {
   document.getElementById('detail-modal-title').textContent = titulo;
   document.getElementById('detail-modal-price').textContent = `${activeCurrency} ${Number(item.precio || 0).toFixed(2)}`;
   document.getElementById('detail-modal-description').textContent = item.descripcion || 'Sin descripción disponible.';
-
-  const oldLiveStock = document.getElementById('detail-modal-livestock');
-  if (oldLiveStock) oldLiveStock.remove();
 
   const addBtn = document.getElementById('detail-modal-add-btn');
   if (addBtn) {

@@ -9,6 +9,13 @@ function setupPageEventListeners(fullData) {
   setupPaginationControls('paquetes', 'paq');
   setupPaginationControls('promociones', 'promo');
 
+  // Asegurar que el botón de la tienda tenga el texto y estilo de WhatsApp
+  const sendOrderBtn = document.getElementById('send-order-btn');
+  if (sendOrderBtn) {
+    sendOrderBtn.textContent = "Enviar Pedido por WhatsApp";
+    sendOrderBtn.className = "w-full bg-black text-white font-bold py-3 uppercase tracking-wider hover:bg-gray-800 transition";
+  }
+
   // Buscador de tienda
   const searchInput = document.getElementById('global-search');
   if (searchInput) {
@@ -77,7 +84,6 @@ function setupPageEventListeners(fullData) {
   }
 
   // Botón de envío por WhatsApp
-  const sendOrderBtn = document.getElementById('send-order-btn');
   if (sendOrderBtn) {
     sendOrderBtn.addEventListener('click', () => {
       const rawName = clientInput ? clientInput.value : '';
