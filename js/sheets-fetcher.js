@@ -1,12 +1,9 @@
 /**
  * ==============================================================================
- * MÓDULO DE INTEGRACIÓN DE DATOS (DATA FETCHER - INVENTARIO ÚNICO)
+ * MÓDULO DE INTEGRACIÓN DE DATOS (DATA FETCHER - INVENTARIO & PROVEEDORES)
  * ==============================================================================
  */
 
-/**
- * Parsea una línea individual de CSV respetando valores entre comillas.
- */
 function parseCsvLine(text) {
   const result = [];
   let cur = '';
@@ -32,9 +29,6 @@ function parseCsvLine(text) {
   return result;
 }
 
-/**
- * Convierte un texto en formato CSV a un arreglo de objetos JavaScript.
- */
 function parseCSV(csvText) {
   const lines = csvText.split(/\r\n|\n/).filter(line => line.trim() !== "");
   if (lines.length < 2) return [];
@@ -56,18 +50,18 @@ function parseCSV(csvText) {
       entry[header] = value;
     });
 
-    // NORMALIZACIÓN GARANTIZADA DE CAMPOS
     entry.id = String(entry.id || '').trim();
     entry.titulo = entry.producto || entry.titulo || 'Sin Título';
     entry.producto = entry.titulo;
     
-    // Limpieza estricta de Precio (elimina $, comas y convierte a número real)
     const rawPrecio = String(entry.precio || '').replace(/[^0-9.]/g, '');
     entry.precio = parseFloat(rawPrecio) || 0;
 
-    // Limpieza estricta de Cantidad / Stock
     const rawCantidad = String(entry.cantidad || '').replace(/[^0-9.]/g, '');
     entry.cantidad = parseFloat(rawCantidad) || 0;
+
+    // Lectura exacta y limpia del proveedor en el inventario principal
+    entry.proveedor = String(entry.proveedor || 'sin proveedor').trim();
 
     result.push(entry);
   }
@@ -75,14 +69,11 @@ function parseCSV(csvText) {
   return result;
 }
 
-/**
- * Petición asíncrona para obtener y parsear los datos de una URL CSV.
- */
 async function fetchCsvData(url) {
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error("⚠️ Error al descargar el inventario");
+      throw new Error("⚠️ Error al descargar datos de Sheets");
     }
     const csvText = await response.text();
 
@@ -99,24 +90,22 @@ async function fetchCsvData(url) {
 }
 
 /**
- * Carga única de la pestaña de Inventario y clasificación por grupos.
+ * Carga completa y simultánea de todo el inventario y la lista de proveedores desde Google Sheets.
  */
 async function loadAllSheetData() {
   try {
-    const inventarioRaw = await fetchCsvData(CONFIG.ENDPOINTS.INVENTARIO);
+    const [inventarioRaw, proveedoresRaw] = await Promise.all([
+      fetchCsvData(CONFIG.ENDPOINTS.INVENTARIO),
+      fetchCsvData(CONFIG.ENDPOINTS.PROVEEDORES)
+    ]);
 
-    // Filtrar filas válidas: DEBEN tener un nombre de producto real Y obligatoriamente un grupo asignado
     const inventarioValido = inventarioRaw.filter(item => {
       const productoValido = item.producto && 
                              String(item.producto).trim() !== '' && 
                              String(item.producto).trim() !== 'Sin Título';
       
       const grupoNormalizado = String(item.grupo || '').toLowerCase().trim();
-
-      // REGLA NUEVA: Si la casilla de grupo está vacía o no existe, SE SALTA y no se cuenta
-      if (!grupoNormalizado) {
-        return false;
-      }
+      if (!grupoNormalizado) return false;
 
       return productoValido;
     });
@@ -133,17 +122,30 @@ async function loadAllSheetData() {
       } else if (grupoNormalizado === 'promocion' || grupoNormalizado === 'promociones' || grupoNormalizado === 'promo' || grupoNormalizado === 'promos') {
         promociones.push(item);
       } else {
-        // Se asume como producto solo si tiene un grupo especificado válido (ej. "producto")
         productos.push(item);
       }
     });
+
+    // Mapeo exacto adaptado a las columnas reales: 'Nombre' y 'Whatsapp (LADA+NUMERO)'
+    const proveedores = proveedoresRaw.map(p => {
+      const nombreProv = String(p.nombre || p.Nombre || '').trim();
+      // Buscamos en todas las posibles variantes de la columna de WhatsApp de tu hoja
+      const whatsappRaw = p['whatsapp (lada+numero)'] || p['whatsapp'] || p['telefono'] || '';
+      const contactoProv = String(whatsappRaw).replace(/[^0-9+]/g, '');
+
+      return {
+        nombre: nombreProv,
+        contacto: contactoProv
+      };
+    }).filter(p => p.nombre !== '');
 
     const dataFinal = {
       config: CONFIG.STORE,
       productos: productos,
       paquetes: paquetes,
       promociones: promociones,
-      todos: inventarioValido
+      todos: inventarioValido,
+      proveedores: proveedores
     };
 
     return dataFinal;
