@@ -52,7 +52,7 @@
                     Calculadora de Precios
                 </h2>
                 <p class="text-xs sm:text-sm text-gray-500">
-                    Fórmula aplicada: <code class="bg-gray-100 px-2 py-1 rounded font-mono text-ferre-main font-bold">(Costo * 1.3 + 5) / piezas</code> con redondeo sin centavos.
+                    Fórmula aplicada: <code class="bg-gray-100 px-2 py-1 rounded font-mono text-ferre-main font-bold">(Costo * 1.3 + 5) / piezas</code> (Mínimo $1.00 por pieza).
                 </p>
             </div>
 
@@ -125,7 +125,7 @@
         Panamerican Systems &bull; Ferrelectrica DAE &copy; 2026
     </footer>
 
-    <!-- Script de cálculo con reglas de redondeo y zoom amigable -->
+    <!-- Script de cálculo con protección de mínimo $1.00 -->
     <script>
         const tipoSelect = document.getElementById('tipo-presentacion');
         const contenedorPiezas = document.getElementById('contenedor-piezas');
@@ -170,7 +170,7 @@
                 }
 
                 costoUnitarioBase = costoValor / cantidadPiezas;
-                // Fórmula solicitada para paquetes: (Costo Total * 1.3 + 5) / cantidad de piezas
+                // Fórmula para paquetes: (Costo Total * 1.3 + 5) / cantidad de piezas
                 precioVentaUnitarioExacto = ((costoValor * 1.3) + 5) / cantidadPiezas;
             } else {
                 costoUnitarioBase = costoValor;
@@ -178,8 +178,13 @@
                 precioVentaUnitarioExacto = (costoValor * 1.3) + 5;
             }
 
-            // Regla de redondeo sin centavos (>= .5 sube, < .5 baja)
-            const precioRedondeado = Math.round(precioVentaUnitarioExacto);
+            // Regla de redondeo normal sin centavos
+            let precioRedondeado = Math.round(precioVentaUnitarioExacto);
+
+            // 🛡️ Protección de mínimo $1.00 para piezas de centavos
+            if (precioRedondeado < 1) {
+                precioRedondeado = 1;
+            }
 
             // Mostrar resultados
             document.getElementById('resultado-container').classList.remove('hidden');
