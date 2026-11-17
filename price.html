@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Costos y Precios - Ferrelectrica DAE</title>
+    <link rel="icon" href="assets/images/general/logo.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ferre: {
+                dark: '#182042',
+                main: '#2A4D91',
+                bright: '#2263DB',
+                sky: '#0074D9',
+                muted: '#54729E',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-100 text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Encabezado -->
+    <header class="bg-ferre-dark text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <img src="assets/images/general/logo.png" alt="Ferrelectrica Logo" class="w-10 h-10 object-contain rounded-md bg-white p-0.5">
+                <h1 class="font-bold text-xl text-white">Ferrelectrica DAE</h1>
+            </div>
+            <a href="index.html" class="text-xs bg-ferre-bright text-white px-3 py-1 rounded-full font-semibold uppercase tracking-wider shadow hover:bg-ferre-main transition">
+                &larr; Volver al Menú
+            </a>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="flex-grow flex items-center justify-center px-4 py-10">
+        <div class="max-w-xl w-full bg-white rounded-2xl shadow-md border border-gray-200 p-6 sm:p-8 space-y-6">
+            
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 bg-ferre-main text-white rounded-2xl flex items-center justify-center text-2xl mx-auto shadow">
+                    🧮
+                </div>
+                <h2 class="text-2xl font-extrabold text-ferre-dark tracking-tight">
+                    Calculadora de Precios de Venta
+                </h2>
+                <p class="text-xs text-gray-500">
+                    Calcula automáticamente el precio de venta aplicando la fórmula: <code class="bg-gray-100 px-1.5 py-0.5 rounded font-mono text-ferre-main font-bold">Costo * 0.3 + 5 + Costo</code>
+                </p>
+            </div>
+
+            <!-- Formulario de Cálculo -->
+            <div class="space-y-4">
+                
+                <!-- Tipo de Compra -->
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-700 mb-1">
+                        📦 Tipo de Presentación:
+                    </label>
+                    <select id="tipo-presentacion" class="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-ferre-bright focus:outline-none bg-white font-bold text-gray-800">
+                        <option value="pieza">Precio por Pieza / Unitario Directo</option>
+                        <option value="paquete">Precio por Paquete / Caja Completa</option>
+                    </select>
+                </div>
+
+                <!-- Campo de Cantidad de Piezas (Oculto por defecto si es pieza unitaria) -->
+                <div id="contenedor-piezas" class="hidden">
+                    <label class="block text-xs font-bold uppercase text-gray-700 mb-1">
+                        🔢 Cantidad de piezas en el paquete:
+                    </label>
+                    <input type="number" id="cantidad-piezas" min="1" placeholder="Ej. 100 clavos en la bolsa" class="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-ferre-bright focus:outline-none bg-white">
+                </div>
+
+                <!-- Costo de Adquisición -->
+                <div>
+                    <label id="label-costo" class="block text-xs font-bold uppercase text-gray-700 mb-1">
+                        💵 Costo de Adquisición ($):
+                    </label>
+                    <input type="number" id="costo-input" step="0.01" min="0" placeholder="Ej. 45.50" class="w-full px-3 py-2 text-sm font-bold border border-gray-300 rounded-lg focus:ring-2 focus:ring-ferre-bright focus:outline-none bg-white">
+                    <p id="subtext-costo" class="text-[10px] text-gray-400 mt-1">Ingresa el costo total o unitario según la opción seleccionada.</p>
+                </div>
+
+                <!-- Botón de Cálculo -->
+                <button onclick="calcularPrecioVenta()" class="w-full bg-ferre-dark text-white font-bold py-2.5 uppercase tracking-wider hover:bg-ferre-main transition rounded-xl text-xs shadow">
+                    Calcular Precio Sugerido
+                </button>
+            </div>
+
+            <!-- Tarjeta de Resultados -->
+            <div id="resultado-container" class="hidden bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-3">
+                <h3 class="text-xs font-bold uppercase text-ferre-dark tracking-wider border-b border-gray-200 pb-2 flex items-center justify-between">
+                    <span>📊 Resultados del Cálculo</span>
+                    <span id="badge-modo" class="bg-ferre-bright text-white text-[9px] px-2 py-0.5 rounded-full">Unitario</span>
+                </h3>
+                
+                <div class="grid grid-cols-2 gap-3 text-center">
+                    <div class="bg-white p-2.5 rounded-lg border border-gray-100 shadow-sm">
+                        <span class="block text-[10px] font-bold text-gray-400 uppercase">Costo Base Unitario</span>
+                        <span id="res-costo-unitario" class="text-sm font-bold text-gray-700">$0.00</span>
+                    </div>
+                    <div class="bg-white p-2.5 rounded-lg border border-emerald-100 bg-emerald-50/40 shadow-sm">
+                        <span class="block text-[10px] font-bold text-emerald-700 uppercase">Precio de Venta Sugerido</span>
+                        <span id="res-precio-venta" class="text-base font-extrabold text-emerald-700">$0.00</span>
+                    </div>
+                </div>
+
+                <div id="detalle-paquete" class="hidden text-[11px] text-gray-600 bg-white p-2 rounded-lg border border-gray-100">
+                    <p>📦 <strong>Costo Total del Paquete:</strong> <span id="res-costo-total">$0.00</span></p>
+                    <p>🏷️ <strong>Precio sugerido por caja/paquete completo:</strong> <span id="res-precio-paquete" class="font-bold text-gray-800">$0.00</span></p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="bg-ferre-dark text-white border-t border-gray-800 py-4 text-center text-xs text-gray-300">
+        Panamerican Systems &bull; Ferrelectrica DAE &copy; 2026
+    </footer>
+
+    <!-- Script Integrado -->
+    <script>
+        const tipoSelect = document.getElementById('tipo-presentacion');
+        const contenedorPiezas = document.getElementById('contenedor-piezas');
+        const labelCosto = document.getElementById('label-costo');
+        const subtextCosto = document.getElementById('subtext-costo');
+
+        tipoSelect.addEventListener('change', () => {
+            if (tipoSelect.value === 'paquete') {
+                contenedorPiezas.classList.remove('hidden');
+                labelCnewToken = "";
+                labelCosto.textContent = "💵 Costo Total del Paquete / Caja ($):";
+                subtextCosto.textContent = "Ingresa lo que costó la bolsa completa.";
+            } else {
+                contenedorPiezas.classList.add('hidden');
+                labelCosto.textContent = "💵 Costo de Adquisición Unitario ($):";
+                subtextCosto.textContent = "Ingresa el costo por pieza individual.";
+            }
+        });
+
+        function calcularPrecioVenta() {
+            const tipo = tipoSelect.value;
+            const costoInput = document.getElementById('costo-input');
+            let costoValor = parseFloat(costoInput.value);
+
+            if (isNaN(costoValor) || costoValor <= 0) {
+                alert("⚠️ Por favor, ingresa un costo válido mayor a cero.");
+                costoInput.focus();
+                return;
+            }
+
+            let costoUnitario = 0;
+            let cantidadPiezas = 1;
+
+            if (tipo === 'paquete') {
+                const piezasInput = document.getElementById('cantidad-piezas');
+                cantidadPiezas = parseInt(piezasInput.value);
+
+                if (isNaN(cantidadPiezas) || cantidadPiezas <= 0) {
+                    alert("⚠️ Por favor, ingresa una cantidad válida de piezas en el paquete.");
+                    piezasInput.focus();
+                    return;
+                }
+                costoUnitario = costoValor / cantidadPiezas;
+            } else {
+                costoUnitario = costoValor;
+            }
+
+            // Aplicar la fórmula: costo * 0.3 + 5 + costo
+            const precioVentaUnitario = (costoUnitario * 0.3) + 5 + costoUnitario;
+
+            document.getElementById('resultado-container').classList.remove('hidden');
+            document.getElementById('badge-modo').textContent = tipo === 'paquete' ? 'Modo Paquete (Convertido)' : 'Modo Unitario';
+            document.getElementById('res-costo-unitario').textContent = `$${costoUnitario.toFixed(2)}`;
+            document.getElementById('res-precio-venta').textContent = `$${precioVentaUnitario.toFixed(2)}`;
+
+            const detallePaquete = document.getElementById('detalle-paquete');
+            if (tipo === 'paquete') {
+                detallePaquete.classList.remove('hidden');
+                document.getElementById('res-costo-total').textContent = `$${costoValor.toFixed(2)}`;
+                const precioVentaTotalPaquete = precioVentaUnitario * cantidadPiezas;
+                document.getElementById('res-precio-paquete').textContent = `$${precioVentaTotalPaquete.toFixed(2)}`;
+            } else {
+                detallePaquete.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
